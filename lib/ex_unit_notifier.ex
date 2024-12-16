@@ -17,7 +17,8 @@ defmodule ExUnitNotifier do
     ExUnitNotifier.Notifiers.TerminalNotifier,
     ExUnitNotifier.Notifiers.NotifySend,
     ExUnitNotifier.Notifiers.TmuxNotifier,
-    ExUnitNotifier.Notifiers.TerminalTitle
+    ExUnitNotifier.Notifiers.TerminalTitle,
+    ExUnitNotifier.Notifiers.HueNotifier
   ]
 
   def init(_opts), do: {:ok, %Counter{}}
