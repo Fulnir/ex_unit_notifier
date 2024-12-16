@@ -5,45 +5,53 @@ defmodule ExUnitNotifier.Notifiers.HueNotifier do
   Hue API: [https://developers.meethue.com/develop/get-started-2/](https://developers.meethue.com/develop/get-started-2/)
 
   """
-  @ip Application.get_env(:ex_unit_notifier, :hue_address)
-  @id Application.get_env(:ex_unit_notifier, :hue_user)
+  @ip Application.compile_env(:ex_unit_notifier, :hue_address, "hue_ip")
+  @id Application.compile_env(:ex_unit_notifier, :hue_user, "hue_user_id")
 
-  @hue_scene_alchemist Application.get_env(:ex_unit_notifier, :hue_scene_alchemist)
-  @hue_scene_successful Application.get_env(:ex_unit_notifier, :hue_scene_successful)
-  @hue_scene_failed Application.get_env(:ex_unit_notifier, :hue_scene_failed)
+  @hue_scene_alchemist Application.compile_env(
+                         :ex_unit_notifier,
+                         :hue_scene_alchemist,
+                         "scene_id"
+                       )
+  @hue_scene_successful Application.compile_env(
+                          :ex_unit_notifier,
+                          :hue_scene_successful,
+                          "scene_id"
+                        )
+  @hue_scene_failed Application.compile_env(:ex_unit_notifier, :hue_scene_failed, "scene_id")
 
-  @hue_scene_room Application.get_env(:ex_unit_notifier, :hue_scene_room)
+  @hue_scene_room Application.compile_env(:ex_unit_notifier, :hue_scene_room, "Office")
 
-  def notify(status, message, _opts) do
-    result =
-      Req.put!(
-        "http://#{@ip}/api/#{@id}/groups/#{@hue_scene_room}/action",
-        body: "{\"scene\": \"#{@hue_scene_failed}\"}"
-      ).body
+  def notify(status, _message, _opts) do
+    if status == :ok do
+      _result =
+        Req.put!(
+          "http://#{@ip}/api/#{@id}/groups/#{@hue_scene_room}/action",
+          body: "{\"scene\": \"#{@hue_scene_successful}\"}"
+        ).body
 
-    Process.sleep(2000)
+      Process.sleep(2000)
 
-    result =
-      Req.put!(
-        "http://#{@ip}/api/#{@id}/groups/Arbeitszimmer/action",
-        body: "{\"scene\": \"#{@hue_scene_alchemist}\"}"
-      ).body
+      _result =
+        Req.put!(
+          "http://#{@ip}/api/#{@id}/groups/Arbeitszimmer/action",
+          body: "{\"scene\": \"#{@hue_scene_alchemist}\"}"
+        ).body
+    else
+      _result =
+        Req.put!(
+          "http://#{@ip}/api/#{@id}/groups/Arbeitszimmer/action",
+          body: "{\"scene\": \"#{@hue_scene_failed}\"}"
+        ).body
 
-    Process.sleep(2000)
-
-    result =
-      Req.put!(
-        "http://#{@ip}/api/#{@id}/groups/Arbeitszimmer/action",
-        body: "{\"scene\": \"#{@hue_scene_successful}\"}"
-      ).body
-
-    Process.sleep(2000)
-
-    result =
-      Req.put!(
-        "http://#{@ip}/api/#{@id}/groups/Arbeitszimmer/action",
-        body: "{\"scene\": \"#{@hue_scene_alchemist}\"}"
-      ).body
+      # Red until tests succesfull
+      # Process.sleep(2000)
+      # _result =
+      #   Req.put!(
+      #     "http://#{@ip}/api/#{@id}/groups/Arbeitszimmer/action",
+      #     body: "{\"scene\": \"#{@hue_scene_alchemist}\"}"
+      #   ).body
+    end
   end
 
   def available?, do: true
