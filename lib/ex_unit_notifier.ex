@@ -14,11 +14,11 @@ defmodule ExUnitNotifier do
   alias ExUnitNotifier.MessageFormatter
 
   @notifiers [
-    ExUnitNotifier.Notifiers.TerminalNotifier,
-    ExUnitNotifier.Notifiers.NotifySend,
-    ExUnitNotifier.Notifiers.TmuxNotifier,
-    ExUnitNotifier.Notifiers.TerminalTitle,
-    ExUnitNotifier.Notifiers.HueNotifier,
+    # ExUnitNotifier.Notifiers.TerminalNotifier,
+    # ExUnitNotifier.Notifiers.NotifySend,
+    # ExUnitNotifier.Notifiers.TmuxNotifier,
+    # ExUnitNotifier.Notifiers.TerminalTitle,
+    # ExUnitNotifier.Notifiers.HueNotifier,
     ExUnitNotifier.Notifiers.EditorNotifier
   ]
 
